@@ -16,11 +16,6 @@
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-
-
 ;; Basic Config
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -65,6 +60,11 @@
 
 
 ;; Set theme
+(use-package all-the-icons)
+;; RUN M-x nerd-icons-install-fonts
+;; RUN M-x all-the-icons-install-fonts
+
+
 (use-package doom-themes
   :custom
   ;; Global settings (defaults)
@@ -85,7 +85,9 @@
 
 ;; Setup mode line
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-icon t))
 
 
 
@@ -154,3 +156,43 @@
   (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
   :config
   (counsel-mode 1))
+
+
+;; Keybindings
+(use-package general
+  :config
+  (general-create-definer writemacs/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (writemacs/leader-keys
+    "t"  '(:ignore t :which-key "toggles")))
+
+
+
+;; Evil
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+  
+
+
+
+
+
