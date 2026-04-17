@@ -170,10 +170,30 @@
     "t"  '(:ignore t :which-key "toggles")))
 
 
+(use-package hydra)
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+(writemacs/leader-keys
+  "ts" '(hydra-text-scale/body :which-key "scale text"))
+
+(defhydra hydra-pomodoro (:timeout 4 :color blue :hint nil)
+  "pomodoro timers"
+  ("w" (org-timer-set-timer "25") "Work")
+  ("s" (org-timer-set-timer "5") "Short break")
+  ("l" (org-timer-set-timer "15") "Long break")
+  ("p" org-timer-pause-or-continue "Pause/Resume" :color red)
+  ("x" org-timer-stop "Stop")
+  ("q" nil "Quit"))   
+
+(writemacs/leader-keys
+  "tp" '(hydra-pomodoro/body :which-key "pomodoro timers"))
+
 
 ;; Evil
-
-
 (use-package evil
   :init
   (setq evil-want-integration t)
@@ -200,4 +220,24 @@
   (evil-collection-init))
 
 
+;; Projectile settins
+;; maybe not very usefull for me
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/Dropbox/Projects")
+    (setq projectile-project-search-path '("~/Dropbox/Projects")))
+  (setq projectile-switch-project-action #'projectile-dired))
 
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+
+;; Git setup
+(use-package magit
+  :commands (magit-status magit-get-current-branch))
