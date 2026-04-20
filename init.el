@@ -2,6 +2,11 @@
 (defvar efs/default-font-size 180)
 (defvar efs/default-variable-font-size 180)
 
+;; To load config files from the same directory as this init.el
+(let ((current-dir (file-name-directory (or load-file-name buffer-file-name))))
+  ;; Add the current directory to Emacs' load path
+  (add-to-list 'load-path current-dir))
+
 
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
@@ -158,41 +163,6 @@
   (counsel-mode 1))
 
 
-;; Keybindings
-(use-package general
-  :config
-  (general-create-definer writemacs/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (writemacs/leader-keys
-    "t"  '(:ignore t :which-key "toggles")))
-
-
-(use-package hydra)
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-(writemacs/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
-
-(defhydra hydra-pomodoro (:timeout 4 :color blue :hint nil)
-  "pomodoro timers"
-  ("w" (org-timer-set-timer "25") "Work")
-  ("s" (org-timer-set-timer "5") "Short break")
-  ("l" (org-timer-set-timer "15") "Long break")
-  ("p" org-timer-pause-or-continue "Pause/Resume" :color red)
-  ("x" org-timer-stop "Stop")
-  ("q" nil "Quit"))   
-
-(writemacs/leader-keys
-  "tp" '(hydra-pomodoro/body :which-key "pomodoro timers"))
-
-
 ;; Evil
 (use-package evil
   :init
@@ -219,6 +189,9 @@
   :config
   (evil-collection-init))
 
+
+(require 'keybindings)
+(require 'quotations)
 
 ;; Projectile settins
 ;; maybe not very usefull for me

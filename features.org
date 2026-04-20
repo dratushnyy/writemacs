@@ -1,0 +1,48 @@
+
+
+- Show dictionary for current / selected word
+- Typing statistics
+    Datetime / word count
+    type-break-mode
+    count-words
+- Tab should move carret / text
+   Replace tab with spaces. 1 tab -> 4 spaces
+
+- Spell check
+
+
+++++++
+1. Inrease fonts
+2. Set automatic borders / page size and do automatic moving to the next line
+3. How to add /repalce em-dash
+4. How to run spell check
+5. Pomodoro timer
+
+
+
+1. treat it as org file
+2. In org file set the font in the beginiing by using literate programming
+
+
+
+--- Fonts
+
+* Courier Prime
+* Courier Screenplay 
+* Courier Final Draft
+
+
+Stories: 
+
+* Garamond
+* Merriweather Light
+* Lora
+* Crimson Text
+* Playfair Display
+* Libre Baskerville
+* Montserrat
+
+
+Special:
+* https://opendyslexic.org/
+* https://font.download/font/aphont
