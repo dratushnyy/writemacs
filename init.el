@@ -1,15 +1,23 @@
-;; Settings for default font size
 ;; Most of this config is copied from emacs-from-scratch repo and videos
 
+;; Settings for default font size
+;; TODO have a separate config file for these
 (defvar writemacs/default-font-size 180)
 (defvar writemacs/default-variable-font-size 180)
 (defvar writemacs/default-fixed-pitch-font "Fira Code Retina")
-(defvar writemacs/default-variable-pitch-font "Cantarell")
+(defvar writemacs/default-variable-pitch-font "Lora")
 (defvar writemacs/pomodoro-end-sound "~/Dropbox/writemacs/ding.wav")
 (defvar writemacs/projects-root-dir "~/Dropbox/Projects/")
 (defvar writemacs/default-theme 'doom-one)
 (defvar writemacs/treemacs-theme "doom-atom")
-  
+
+
+;; Startup in the projects root directory
+(defun writemacs/startup-hook ()
+  (cd writemacs/projects-root-dir))
+(add-hook 'emacs-startup-hook #'writemacs/startup-hook)
+
+
 ;; To load config files from the same directory as this init.el
 (let ((current-dir (file-name-directory (or load-file-name buffer-file-name))))
   ;; Add the current directory to Emacs' load path
@@ -55,9 +63,7 @@
   (package-install 'use-package))
 
 (require 'use-package)
-
 (setq use-package-always-ensure t)
-
 
 
 ;; Set fonts
@@ -218,13 +224,10 @@
 
 
 ;; Git setup
+;; maybe not very usefull for me. 
 (use-package magit
   :commands (magit-status magit-get-current-branch))
 
 (require 'formatting)
 
-;; Startup in the projects root directory
 
-(defun writemacs/startup-hook ()
-  (cd writemacs/projects-root-dir))
-(add-hook 'emacs-startup-hook #'writemacs/startup-hook)

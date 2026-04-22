@@ -13,14 +13,7 @@
 
 
 (use-package hydra)
-(defhydra writemacs-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("" nil "finished" :exit t))
 
-(writemacs/leader-keys
-  "ts" '(writemacs-text-scale/body :which-key "scale text"))
 
 (defhydra writemacs-pomodoro (:timeout 4 :color blue :hint nil)
   "pomodoro timers"
