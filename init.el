@@ -1,7 +1,15 @@
 ;; Settings for default font size
-(defvar efs/default-font-size 180)
-(defvar efs/default-variable-font-size 180)
+;; Most of this config is copied from emacs-from-scratch repo and videos
 
+(defvar writemacs/default-font-size 180)
+(defvar writemacs/default-variable-font-size 180)
+(defvar writemacs/default-fixed-pitch-font "Fira Code Retina")
+(defvar writemacs/default-variable-pitch-font "Cantarell")
+(defvar writemacs/pomodoro-end-sound "~/Dropbox/writemacs/ding.wav")
+(defvar writemacs/projects-root-dir "~/Dropbox/Projects/")
+(defvar writemacs/default-theme 'doom-one)
+(defvar writemacs/treemacs-theme "doom-atom")
+  
 ;; To load config files from the same directory as this init.el
 (let ((current-dir (file-name-directory (or load-file-name buffer-file-name))))
   ;; Add the current directory to Emacs' load path
@@ -11,14 +19,14 @@
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
-(defun efs/display-startup-time ()
+(defun writemacs/display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
            (format "%.2f seconds"
                    (float-time
                      (time-subtract after-init-time before-init-time)))
            gcs-done))
 
-(add-hook 'emacs-startup-hook #'efs/display-startup-time)
+(add-hook 'emacs-startup-hook #'writemacs/display-startup-time)
 
 
 ;; Basic Config
@@ -28,7 +36,6 @@
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
-
 
 
 ;; Initialize package sources
@@ -54,13 +61,13 @@
 
 
 ;; Set fonts
-(set-face-attribute 'default nil :font "Fira Code Retina" :height 180)(set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
+(set-face-attribute 'default nil :font writemacs/default-fixed-pitch-font :height writemacs/default-font-size)
 
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height efs/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font writemacs/default-fixed-pitch-font :height writemacs/default-font-size)
 
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font writemacs/default-variable-pitch-font :height writemacs/default-variable-font-size :weight 'regular)
 
 
 
@@ -76,9 +83,9 @@
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; for treemacs users
-  (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-theme writemacs/treemacs-theme) ; use "doom-colors" for less minimal icon theme
   :config
-  (load-theme 'doom-one t)
+  (load-theme writemacs/default-theme t)
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (nerd-icons must be installed!)
@@ -97,8 +104,7 @@
 
 
 ;; Set pomodoro timer sound
-(setq org-clock-sound "~/Dropbox/dotfiles/ding.wav")
-
+(setq org-clock-sound writemacs/pomodoro-end-sound)
 
 
 ;; Set line and column numbers
@@ -203,8 +209,8 @@
   ("C-c p" . projectile-command-map)
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/Dropbox/Projects")
-    (setq projectile-project-search-path '("~/Dropbox/Projects")))
+  (when (file-directory-p writemacs/projects-root-dir) )
+    (setq projectile-project-search-path 'writemacs/projects-root-dir)
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -214,3 +220,11 @@
 ;; Git setup
 (use-package magit
   :commands (magit-status magit-get-current-branch))
+
+(require 'formatting)
+
+;; Startup in the projects root directory
+
+(defun writemacs/startup-hook ()
+  (cd writemacs/projects-root-dir))
+(add-hook 'emacs-startup-hook #'writemacs/startup-hook)
