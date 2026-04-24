@@ -1,17 +1,5 @@
 ;; Most of this config is copied from emacs-from-scratch repo and videos
 
-;; Settings for default font size
-;; TODO have a separate config file for these
-(defvar writemacs/default-font-size 180)
-(defvar writemacs/default-variable-font-size 180)
-(defvar writemacs/default-fixed-pitch-font "Fira Code Retina")
-(defvar writemacs/default-variable-pitch-font "Lora")
-(defvar writemacs/pomodoro-end-sound "~/Dropbox/writemacs/ding.wav")
-(defvar writemacs/projects-root-dir "~/Dropbox/Projects/")
-(defvar writemacs/default-theme 'doom-one)
-(defvar writemacs/treemacs-theme "doom-atom")
-
-
 ;; Startup in the projects root directory
 (defun writemacs/startup-hook ()
   (cd writemacs/projects-root-dir))
@@ -21,7 +9,11 @@
 ;; To load config files from the same directory as this init.el
 (let ((current-dir (file-name-directory (or load-file-name buffer-file-name))))
   ;; Add the current directory to Emacs' load path
-  (add-to-list 'load-path current-dir))
+  (add-to-list 'load-path current-dir)
+  ;; Use expand-file-name to properly concatenate the path and filename
+  (setq custom-file (expand-file-name "vars.el" current-dir)))
+
+(load custom-file 'noerror 'nomessage)
 
 
 ;; The default is 800 kilobytes.  Measured in bytes.
@@ -39,12 +31,27 @@
 
 ;; Basic Config
 (setq inhibit-startup-message t)
+(setq use-dialog-box nil)
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 10)        ; Give some breathing room
+(set-fringe-mode 20)        ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
+(recentf-mode 1)            ; Recent files
+(setq history-length writemacs/minibuff-history-length)    ; Max history lendth
+(savehist-mode 1)           ; Saving command history
+(save-place-mode 1)         ; Save the place in the file
+(global-auto-revert-mode 1) ; Revert buffers when underlying files has changes
+(setq global-auto-revert-non-file-buffers t)
 
+;; Set the exact format: Day abbreviation, Hour:Minute:Second
+(setq display-time-format "%a, %H:%M:%S")
+
+;; Force the clock to update every 1 second
+(setq display-time-interval 1)
+
+;; Restart the mode to apply the new interval and format immediately
+(display-time-mode 1)
 
 ;; Initialize package sources
 (require 'package)
@@ -87,8 +94,7 @@
   :custom
   ;; Global settings (defaults)
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
-  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; for treemacs users
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled  ;; for treemacs users
   (doom-themes-treemacs-theme writemacs/treemacs-theme) ; use "doom-colors" for less minimal icon theme
   :config
   (load-theme writemacs/default-theme t)
@@ -105,8 +111,8 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-icon t))
-
+  (setq doom-modeline-icon t)
+  (setq display-time t))
 
 
 ;; Set pomodoro timer sound
